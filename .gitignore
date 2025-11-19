@@ -1,0 +1,34 @@
+# Build outputs
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# Logs
+*.log
+*.tlog
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+*.symbols.nupkg
+
+# User secrets
+secrets.json
+.env
+**/appsettings*.json

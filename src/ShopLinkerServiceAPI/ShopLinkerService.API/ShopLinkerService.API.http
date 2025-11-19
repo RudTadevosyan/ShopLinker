@@ -1,0 +1,6 @@
+@ShopLinkerService.API_HostAddress = http://localhost:5236
+
+GET {{ShopLinkerService.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
