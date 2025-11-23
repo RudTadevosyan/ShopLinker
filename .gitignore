@@ -12,12 +12,8 @@ obj/
 src/**/*.http
 *.http
 
-docker/.env
 docker/secrets/
-
 docker/env/*.env           
-
-!docker/env/*.example.*
 
 src/**/appsettings.json
 src/**/appsettings.*.json
