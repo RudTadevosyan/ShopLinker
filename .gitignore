@@ -1,3 +1,4 @@
+# Build & IDE
 bin/
 obj/
 **/bin/
@@ -8,16 +9,19 @@ obj/
 *.suo
 *.csproj.user
 *.DotSettings.user
+src/**/*.http
 *.http
 
 docker/.env
 docker/secrets/
-docker/env/*.env          # ignores auth.env, gateway.env, shoplinker.env, etc.
-!docker/env/*.env.example # keeps all .example files
+
+docker/env/*.env           
+
+!docker/env/*.example.*
 
 src/**/appsettings.json
-src/**/appsettings.*.json      # ignores appsettings.Development.json, etc.
-!src/**/appsettings*.example.json  # keeps appsettings.json.example, appsettings.Development.json.example, etc.
+src/**/appsettings.*.json
+!src/**/appsettings*.example.json
 
 packages/
 *.nupkg
@@ -26,4 +30,3 @@ packages/
 *.log
 .DS_Store
 Thumbs.db
-
