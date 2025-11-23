@@ -1,0 +1,126 @@
+services:
+  postgres-auth:
+    image: postgres:16-alpine
+    container_name: shoplinker-postgres-auth
+    restart: always
+    env_file: ./env/auth.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 20
+
+  postgres-shop:
+    image: postgres:16-alpine
+    container_name: shoplinker-postgres-shop
+    restart: always
+    env_file: ./env/shoplinker.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - shoplinker_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: shoplinker-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: shoplinker-rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
+    container_name: shoplinker-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock: -1
+      nofile: 65536
+    ports:
+      - "9200:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
+      interval: 10s
+      retries: 30
+
+  authservice:
+    build:
+      context: ../src/AuthServiceAPI
+      dockerfile: Dockerfile
+    container_name: shoplinker-authservice
+    restart: always
+    env_file: ./env/auth.env
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - DOTNET_ENVIRONMENT=Development 
+    depends_on:
+      postgres-auth:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    ports:
+      - "8081:8080"
+
+  shoplinkerservice:
+    build:
+      context: ../src/ShopLinkerServiceAPI
+      dockerfile: Dockerfile
+    container_name: shoplinker-shoplinkerservice
+    restart: always
+    env_file: ./env/shoplinker.env
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - DOTNET_ENVIRONMENT=Development 
+    depends_on:
+      postgres-shop:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "8082:8080"
+
+  gateway:
+    build:
+      context: ../src/ShopLinkerGateway
+      dockerfile: Dockerfile
+    container_name: shoplinker-gateway
+    restart: always
+    env_file: ./env/gateway.env
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - DOTNET_ENVIRONMENT=Development 
+    depends_on:
+      - authservice
+      - shoplinkerservice
+    ports:
+      - "8000:8080"
+
+volumes:
+  auth_pgdata:
+  shoplinker_pgdata:
