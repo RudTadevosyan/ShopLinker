@@ -1,34 +1,28 @@
-# Build outputs
+# Build & IDE
 bin/
 obj/
 **/bin/
 **/obj/
-
-# Visual Studio
 .vs/
+.idea/
 *.user
 *.suo
-*.userosscache
-*.sln.docstates
+*.csproj.user
+*.DotSettings.user
+src/**/*.http
+*.http
 
-# Rider
-.idea/
+docker/secrets/
+docker/env/*.env           
 
-# Logs
-*.log
-*.tlog
+src/**/appsettings.json
+src/**/appsettings.*.json
+!src/**/appsettings*.example.json
 
-# OS generated
-.DS_Store
-Thumbs.db
-
-# NuGet packages
-*.nupkg
 packages/
+*.nupkg
 *.snupkg
 *.symbols.nupkg
-
-# User secrets
-secrets.json
-.env
-**/appsettings*.json
+*.log
+.DS_Store
+Thumbs.db

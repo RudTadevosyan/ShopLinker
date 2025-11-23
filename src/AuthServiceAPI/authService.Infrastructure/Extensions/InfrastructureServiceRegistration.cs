@@ -31,9 +31,9 @@ public static class InfrastructureServiceRegistration
                 opt.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(opt =>
+            .AddJwtBearer(options =>
             {
-                opt.TokenValidationParameters = new TokenValidationParameters
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
@@ -44,7 +44,8 @@ public static class InfrastructureServiceRegistration
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
-
+        
+        
         // Repositories DI
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
