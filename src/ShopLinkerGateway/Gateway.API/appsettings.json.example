@@ -1,0 +1,61 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning",
+      "Yarp": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+
+  "Jwt": {
+    "Key": "JWTSECRETKEY",
+    "Issuer": "ISSUER",
+    "Audience": "AUDIENCE"
+  },
+
+  "ReverseProxy": {
+    "Routes": {
+      "auth-route": {
+        "ClusterId": "authCluster",
+        "Match": { "Path": "/auth/{**catchall}" },
+        "Transforms": [
+          { "PathRemovePrefix": "/auth" },
+          { "PathPrefix": "/api/Auth" }
+        ]
+      },
+
+      "shop-route": {
+        "ClusterId": "shopCluster",
+        "Match": { "Path": "/shop/{**catchall}" },
+        "Transforms": [
+          { "PathRemovePrefix": "/shop" },
+          { "PathPrefix": "/api/Shop" }
+        ]
+      },
+
+      "fallback-route": {
+        "ClusterId": "shopCluster",
+        "Match": { "Path": "/{**catchall}" }
+      }
+    },
+
+    "Clusters": {
+      "authCluster": {
+        "Destinations": {
+          "auth": {
+            "Address": "http://shoplinker-authservice:8080/"
+          }
+        }
+      },
+
+      "shopCluster": {
+        "Destinations": {
+          "shop": {
+            "Address": "http://shoplinker-shoplinkerservice:8080/"
+          }
+        }
+      }
+    }
+  }
+}

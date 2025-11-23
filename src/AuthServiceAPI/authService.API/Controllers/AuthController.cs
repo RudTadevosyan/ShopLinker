@@ -1,5 +1,6 @@
 ﻿using authService.Domain.Interfaces;
 using AuthService.Shared.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace authService.API.Controllers
@@ -86,6 +87,13 @@ namespace authService.API.Controllers
         {
             await _authService.ChangePasswordAsync(updateDto);
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("test")]
+        public Task<IActionResult> TestAuth()
+        {
+            return Task.FromResult<IActionResult>(Ok(new { message = "Test auth successful." }));
         }
     }
 }

@@ -5,6 +5,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Configuration.AddEnvironmentVariables();
 
         // Add services to the container.
 
@@ -21,13 +22,24 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        else
+        {
+            app.UseExceptionHandler("/error");
+            app.UseHttpsRedirection();
+        }
 
-        app.UseHttpsRedirection();
 
+        //app.UseAuthentication();
         app.UseAuthorization();
-
-
+        
         app.MapControllers();
+        
+        app.MapGet("/health", () => Results.Ok(new
+        {
+            status = "healthy",
+            service = "ShopLinkerService",
+            timestamp = DateTime.UtcNow
+        }));
 
         app.Run();
     }

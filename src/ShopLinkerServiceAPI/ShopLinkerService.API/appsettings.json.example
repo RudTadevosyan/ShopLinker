@@ -1,0 +1,39 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+
+  "ConnectionStrings": {
+    "ShopLinkerDbContext": "Host=POSGRES_HOST_SHOPLINKER;Port=POSTGRES_PORT;Database=POSTGRES_SHOPLINKER;Username=postgres;Password=PASSWORD"
+  },
+
+  "Jwt": {
+    "Key": "JWTSECRETKEY",
+    "Issuer": "ISSUER",
+    "Audience": "AUDIENCE"
+  },
+  
+  "Elastic": {
+    "Host": "http://shoplinker-elasticsearch:9200"
+  },
+
+  "Redis": {
+    "Host": "shoplinker-redis:6379"
+  },
+
+  "RabbitMQ": {
+    "Host": "shoplinker-rabbitmq"
+  },
+
+  "Kestrel": {
+    "Endpoints": {
+      "Http": {
+        "Url": "http://0.0.0.0:8080"
+      }
+    }
+  }
+}

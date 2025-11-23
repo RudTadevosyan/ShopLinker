@@ -1,34 +1,29 @@
-# Build outputs
 bin/
 obj/
 **/bin/
 **/obj/
-
-# Visual Studio
 .vs/
+.idea/
 *.user
 *.suo
-*.userosscache
-*.sln.docstates
+*.csproj.user
+*.DotSettings.user
+*.http
 
-# Rider
-.idea/
+docker/.env
+docker/secrets/
+docker/env/*.env          # ignores auth.env, gateway.env, shoplinker.env, etc.
+!docker/env/*.env.example # keeps all .example files
 
-# Logs
+src/**/appsettings.json
+src/**/appsettings.*.json      # ignores appsettings.Development.json, etc.
+!src/**/appsettings*.example.json  # keeps appsettings.json.example, appsettings.Development.json.example, etc.
+
+packages/
+*.nupkg
+*.snupkg
+*.symbols.nupkg
 *.log
-*.tlog
-
-# OS generated
 .DS_Store
 Thumbs.db
 
-# NuGet packages
-*.nupkg
-packages/
-*.snupkg
-*.symbols.nupkg
-
-# User secrets
-secrets.json
-.env
-**/appsettings*.json

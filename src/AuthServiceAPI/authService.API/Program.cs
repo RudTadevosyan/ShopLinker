@@ -1,7 +1,6 @@
 using authService.API.CustomMiddlewares;
 using authService.Application.Extensions;
-using authService.Application.Services;
-using Microsoft.AspNetCore.Identity;
+
 
 namespace authService.API;
 
@@ -11,41 +10,47 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         
-        // Add all services 
+        builder.Configuration.AddEnvironmentVariables();
+        // Add all services
         builder.Services.AddApplicationServices(builder.Configuration);
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-
+        
         //swagger 
         builder.Services.AddSwaggerGen();
-
         var app = builder.Build();
 
+        await app.Services.ApplyMigrationsAsync();
+        await app.Services.SeedRolesAsync();
+        
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        
-        app.UseMiddleware<GlobalExceptionHandler>();
-        
-        using (var scope = app.Services.CreateScope())
+        else
         {
-            // creating scope and passing to the Roles class his required roleManager service
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-            await Roles.AddRoles(roleManager);
+            app.UseHttpsRedirection();
         }
         
-        app.UseHttpsRedirection();
+        app.UseCookiePolicy(new CookiePolicyOptions
+        {
+            Secure = app.Environment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always,
+            MinimumSameSitePolicy = app.Environment.IsDevelopment() ? SameSiteMode.Lax : SameSiteMode.None
+        });
+        
+        app.UseMiddleware<GlobalExceptionHandler>();
 
         app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();
 
+        app.MapGet("/health", () => Results.Ok(new { status = "Healthy", service = "AuthService", time = DateTime.UtcNow }));
+        
         await app.RunAsync();
     }
 }

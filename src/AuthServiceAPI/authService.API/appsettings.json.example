@@ -1,0 +1,27 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "AuthServiceDbContext": "Host=POSTGRES_HOSTNAME;Port=POSTGRES_PORT;Database=POSTGRES_AUTH;Username=postgres;Password=PASSWORD"
+  },
+
+  "Jwt": {
+    "Key": "JWTSECRETKEY",
+    "Issuer": "JWTISSUER",
+    "Audience": "JWTAUDIENCE"
+  },
+
+  "Kestrel": {
+    "Endpoints": {
+      "Http": {
+        "Url": "http://0.0.0.0:8080"
+      }
+    }
+  }
+}

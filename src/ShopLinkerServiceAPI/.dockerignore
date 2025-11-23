@@ -1,0 +1,54 @@
+# Build artifacts
+bin/
+obj/
+**/bin/
+**/obj/
+out/
+publish/
+*.csproj.user
+*.dbmdl
+*.jfm
+
+# IDE & editor garbage
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.iml
+*.swp
+*.swn
+*.swo
+
+# Logs & temp
+*.log
+*.tlog
+logs/
+temp/
+tmp/
+
+# Secrets & local env
+.env
+.env.local
+.env.*.local
+secrets/
+*.pem
+*.key
+*.cer
+
+# Docker & compose files (never bake them into images)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# OS garbage
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Test results / coverage
+TestResults/
+coverage/
+*.trx
